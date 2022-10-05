@@ -1,0 +1,180 @@
+---
+title: "👻 Historias de horror gracias a Excel 👻"
+subtitle: "soluciones con el paquete janitor"
+author: "Sara Acevedo"
+output:
+  xaringan::moon_reader:
+    css: xaringan-themer.css
+---
+class: center, middle  
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+library(tidyverse)
+library(readxl)
+library(kableExtra)
+library(janitor)
+
+style_mono_accent(base_color = "#FE9600",
+                  inverse_link_color = "white")
+
+xaringanExtra::use_panelset()
+xaringanExtra::use_clipboard()
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+# bienvenidos!!
+.center[Mi nombre es Sara Acevedo, y el tuyo?]
+[saryace.github.io](https://saryace.github.io)
+[@saryace](https://twitter.com/saryace)
+
+
+---
+
+## Qué veremos hoy?
+
+* Buenas prácticas para la reproducibilidad de los datos
+* Como el paquete janitor puede ayudarnos a limpiar nuestros horrendos datos
+
+> Nota: The Janitor (2003) es una película horror con nota 5.5/10 en IMDb
+
+> Nota: Colin the Janitor es un personaje de la película Silent Hill (2006)
+
+---
+
+class: center middle inverse
+
+Un análisis de datos es *reproducible* si toda la información (datos, archivos, etc.) necesaria está disponible para que otra persona pueda rehacer su análisis completo. 
+
+.footnote[
+[1] Capítulo 5 de [R programming for research](https://geanders.github.io/RProgrammingForResearch/reproducible-research-1.html)
+]
+
+
+---
+
+class: center middle inverse
+.right[usando R + tidyverse podemos hacer ciencia de datos reproducible]
+
+---
+
+class: center middle 
+
+.center[#spoiler alert: nunca pasa, los datos siempre estarán desordenados]
+
+
+---
+class: center middle 
+
+<img src="01_figures/meme_excel.jpeg" alt="meme" width="500"/>
+
+---
+
+class: center middle inverse
+
+.center[#paquete janitor]
+
+---
+
+### Ejemplo de datos desordenados
+```{r}
+datos_mascotas <- read_excel("01_data/datos_vecinos.xlsx")
+datos_mascotas  %>% kbl() %>%
+  kable_classic_2(full_width = F)
+```
+
+.footnote[
+[1] [R package reviews {janitor} clean your data! - Yuri Zablotski](https://yuzar-blog.netlify.app/posts/2021-01-02-r-package-reviews-janitor-clean-your-data/)
+]
+
+---
+### funciones del paquete janitor
+
+La función `row_to_names()` permite seleccionar una fila como nombre de columna
+
+```{r}
+datos_mascotas %>% 
+  row_to_names(1) %>%
+  kbl() %>%
+  kable_classic_2(full_width = F)
+```
+
+---
+
+### funciones del paquete janitor
+
+La función `clean_names()` elimina las "no-letras" y símbolos, y une las palabras con guiones bajos
+
+```{r}
+datos_mascotas %>% 
+  row_to_names(1) %>%
+  clean_names() %>%
+  kbl() %>%
+  kable_classic_2(full_width = F)
+```
+
+---
+
+### Con `row_to_names()` y `clean_names()` creamos nuestro primer paso de limpieza de nombres de columnas
+
+```{r}
+datos_primer_paso_limpieza <- 
+datos_mascotas %>% 
+  row_to_names(1) %>%
+  clean_names() 
+```
+
+---
+
+### funciones del paquete janitor
+
+Las funciones `remove_empty()` y `remove_constant()` eliminan tanto las filas como las columnas vacías o constantes
+
+```{r}
+
+datos_primer_paso_limpieza %>% 
+  remove_empty("cols") %>%
+  remove_constant() %>%
+  kbl() %>%
+  kable_classic_2(full_width = F)
+
+```
+
+---
+
+### funciones del paquete janitor
+
+La función  `convert_to_date` convierte las secuencias de números como fecha de Excel
+
+```{r}
+datos_primer_paso_limpieza %>% 
+  select(fecha_ingreso) %>% 
+  mutate(fecha_ordenada =
+         convert_to_date(fecha_ingreso)) %>%
+  kbl() %>%
+  kable_classic_2(full_width = F)
+
+```
+
+---
+
+### funciones del paquete janitor
+
+La función `get_dupes()` permite explorar duplicados en diferentes columnas
+
+```{r}
+datos_primer_paso_limpieza %>% 
+  get_dupes(c(primer_apellido, segundo_apellido, depto)) %>% 
+  kbl() %>%
+  kable_classic_2(full_width = F)
+
+```
+
+---
+
+class: center middle inverse
+
+## Gracias por tu atención 🎃
+
+

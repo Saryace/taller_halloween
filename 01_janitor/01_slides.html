@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>👻 Historias de horror gracias a Excel 👻</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Sara Acevedo" />
+    <script src="01_slides_files/header-attrs-2.14/header-attrs.js"></script>
+    <link href="01_slides_files/panelset-0.2.6/panelset.css" rel="stylesheet" />
+    <script src="01_slides_files/panelset-0.2.6/panelset.js"></script>
+    <script src="01_slides_files/clipboard-2.0.6/clipboard.min.js"></script>
+    <link href="01_slides_files/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.css" rel="stylesheet" />
+    <script src="01_slides_files/xaringanExtra-clipboard-0.2.6/xaringanExtra-clipboard.js"></script>
+    <script>window.xaringanExtraClipboard(null, {"button":"Copy Code","success":"Copied!","error":"Press Ctrl+C to Copy"})</script>
+    <script src="01_slides_files/kePrint-0.0.1/kePrint.js"></script>
+    <link href="01_slides_files/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# 👻 Historias de horror gracias a Excel 👻
+]
+.subtitle[
+## soluciones con el paquete janitor
+]
+.author[
+### Sara Acevedo
+]
+
+---
+
+class: center, middle  
+
+
+
+# bienvenidos!!
+.center[Mi nombre es Sara Acevedo, y el tuyo?]
+[saryace.github.io](https://saryace.github.io)
+[@saryace](https://twitter.com/saryace)
+
+
+---
+
+## Qué veremos hoy?
+
+* Buenas prácticas para la reproducibilidad de los datos
+* Como el paquete janitor puede ayudarnos a limpiar nuestros horrendos datos
+
+&gt; Nota: The Janitor (2003) es una película horror con nota 5.5/10 en IMDb
+
+&gt; Nota: Colin the Janitor es un personaje de la película Silent Hill (2006)
+
+---
+
+class: center middle inverse
+
+Un análisis de datos es *reproducible* si toda la información (datos, archivos, etc.) necesaria está disponible para que otra persona pueda rehacer su análisis completo. 
+
+.footnote[
+[1] Capítulo 5 de [R programming for research](https://geanders.github.io/RProgrammingForResearch/reproducible-research-1.html)
+]
+
+
+---
+
+class: center middle inverse
+.right[usando R + tidyverse podemos hacer ciencia de datos reproducible]
+
+---
+
+class: center middle 
+
+.center[#spoiler alert: nunca pasa, los datos siempre estarán desordenados]
+
+
+---
+class: center middle 
+
+&lt;img src="01_figures/meme_excel.jpeg" alt="meme" width="500"/&gt;
+
+---
+
+class: center middle inverse
+
+.center[#paquete janitor]
+
+---
+
+### Ejemplo de datos desordenados
+
+```r
+datos_mascotas &lt;- read_excel("01_data/datos_vecinos.xlsx")
+datos_mascotas  %&gt;% kbl() %&gt;%
+  kable_classic_2(full_width = F)
+```
+
+&lt;table class=" lightable-classic-2" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; width: auto !important; margin-left: auto; margin-right: auto;'&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; aca los datos &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; ...2 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; ...3 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; ...4 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; ...5 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; ...6 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; ...7 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; ...8 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; ...9 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; ...10 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Primer apellido &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Segundo Apellido &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; depto &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; mascota &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; ID?? &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; fecha ingreso &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Vacunas &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; revisar &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; chequeo 2020 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; chequeo 2021 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vega &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Pamela &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gato &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43892 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Rivera &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Rodrigo &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Perro &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43898 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Barrera &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Juan &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Perro &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43933 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NO &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Perez &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Ester &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Perro &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; placa &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43928 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SI &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; no &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vega &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Pamela &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; gato &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; placa + chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43892 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; no &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; no &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Valenzuela &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Ines &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; gato &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; placa+chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 44257 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+.footnote[
+[1] [R package reviews {janitor} clean your data! - Yuri Zablotski](https://yuzar-blog.netlify.app/posts/2021-01-02-r-package-reviews-janitor-clean-your-data/)
+]
+
+---
+### funciones del paquete janitor
+
+La función `row_to_names()` permite seleccionar una fila como nombre de columna
+
+
+```r
+datos_mascotas %&gt;% 
+  row_to_names(1) %&gt;%
+  kbl() %&gt;%
+  kable_classic_2(full_width = F)
+```
+
+&lt;table class=" lightable-classic-2" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; width: auto !important; margin-left: auto; margin-right: auto;'&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Primer apellido &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Segundo Apellido &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; depto &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; mascota &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; ID?? &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; fecha ingreso &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Vacunas &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; revisar &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; chequeo 2020 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; chequeo 2021 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vega &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Pamela &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gato &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43892 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Rivera &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Rodrigo &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Perro &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43898 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Barrera &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Juan &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Perro &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43933 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NO &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Perez &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Ester &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Perro &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; placa &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43928 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SI &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; no &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vega &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Pamela &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; gato &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; placa + chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43892 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; no &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; no &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Valenzuela &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Ines &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; gato &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; placa+chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 44257 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+### funciones del paquete janitor
+
+La función `clean_names()` elimina las "no-letras" y símbolos, y une las palabras con guiones bajos
+
+
+```r
+datos_mascotas %&gt;% 
+  row_to_names(1) %&gt;%
+  clean_names() %&gt;%
+  kbl() %&gt;%
+  kable_classic_2(full_width = F)
+```
+
+&lt;table class=" lightable-classic-2" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; width: auto !important; margin-left: auto; margin-right: auto;'&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; primer_apellido &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; segundo_apellido &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; depto &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; mascota &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; id &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; fecha_ingreso &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; vacunas &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; revisar &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; chequeo_2020 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; chequeo_2021 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vega &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Pamela &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gato &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43892 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Rivera &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Rodrigo &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Perro &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43898 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Barrera &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Juan &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Perro &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43933 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NO &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Perez &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Ester &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Perro &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; placa &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43928 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SI &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; no &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vega &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Pamela &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; gato &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; placa + chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43892 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; no &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; no &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Valenzuela &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Ines &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; gato &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; placa+chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 44257 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+### Con `row_to_names()` y `clean_names()` creamos nuestro primer paso de limpieza de nombres de columnas
+
+
+```r
+datos_primer_paso_limpieza &lt;- 
+datos_mascotas %&gt;% 
+  row_to_names(1) %&gt;%
+  clean_names() 
+```
+
+---
+
+### funciones del paquete janitor
+
+La funciones `remove_empty()` y `remove_constant()` eliminan tanto las filas como las columnas vacías o constantes
+
+
+```r
+datos_primer_paso_limpieza %&gt;% 
+  remove_empty("cols") %&gt;%
+  remove_constant() %&gt;%
+  kbl() %&gt;%
+  kable_classic_2(full_width = F)
+```
+
+&lt;table class=" lightable-classic-2" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; width: auto !important; margin-left: auto; margin-right: auto;'&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; primer_apellido &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; segundo_apellido &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; depto &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; mascota &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; id &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; fecha_ingreso &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; vacunas &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; chequeo_2020 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vega &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Pamela &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gato &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43892 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Rivera &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Rodrigo &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Perro &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43898 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Barrera &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Juan &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Perro &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43933 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NO &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Perez &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Ester &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Perro &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; placa &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43928 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SI &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; no &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vega &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Pamela &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; gato &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; placa + chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43892 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; no &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; no &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Valenzuela &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Ines &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; gato &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; placa+chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 44257 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+### funciones del paquete janitor
+
+La funciones `convert_to_date` convierte las secuencias de números como fecha de Excel
+
+
+```r
+datos_primer_paso_limpieza %&gt;% 
+  select(fecha_ingreso) %&gt;% 
+  mutate(fecha_ordenada =
+         convert_to_date(fecha_ingreso)) %&gt;%
+  kbl() %&gt;%
+  kable_classic_2(full_width = F)
+```
+
+&lt;table class=" lightable-classic-2" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; width: auto !important; margin-left: auto; margin-right: auto;'&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; fecha_ingreso &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; fecha_ordenada &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 43892 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2020-03-02 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 43898 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2020-03-08 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 43933 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2020-04-12 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 43928 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2020-04-07 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 43892 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2020-03-02 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 44257 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 2021-03-02 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+### funciones del paquete janitor
+
+La función `get_dupes()` permite explorar duplicados en diferentesc columnas
+
+
+```r
+datos_primer_paso_limpieza %&gt;% 
+  get_dupes(c(primer_apellido, segundo_apellido, depto)) %&gt;% 
+  kbl() %&gt;%
+  kable_classic_2(full_width = F)
+```
+
+&lt;table class=" lightable-classic-2" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; width: auto !important; margin-left: auto; margin-right: auto;'&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; primer_apellido &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; segundo_apellido &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; depto &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dupe_count &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; mascota &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; id &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; fecha_ingreso &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; vacunas &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; revisar &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; chequeo_2020 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; chequeo_2021 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vega &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Pamela &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gato &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43892 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; si &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Vega &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Pamela &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; gato &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; placa + chip &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 43892 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; no &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; no &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; pendiente &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+class: center middle inverse
+
+## Gracias por tu atención 🎃
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create();
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
